@@ -29,5 +29,6 @@ See [starting guide](https://medium.com/swlh/deploy-vue-app-to-github-pages-2ada
 <code>
 npm install --global yarn
 npm install -g @vue/cli
+yarn add xstate markdown-it indent.js
 yarn deploy
 </code>
