@@ -1,36 +1,62 @@
 <template>
   <div class="advent">
-    <h1>{{ msg }}</h1>
-    <p> {{info}}</p>
-    <b-form-input v-model="act"></b-form-input>
     
-    <b-button @click="update()" v-model="act" >Enter</b-button>
+      <h1>{{msg }}</h1>
+      <Location></Location>
+      <p> {{info}}</p>
+      
+
+      <b-form-input v-model="act"></b-form-input>
+      <b-button @click="go"> enter </b-button>
+
+      <StateMachine></StateMachine>
   </div>
 </template>
 
 <script>
+import StateMachine from './StateMachine.vue'
+import Location from './Location.vue'
+
+//var Nanocomponent = require('nanocomponent')
+///var nanostate = require('nanostate')
+
 export default {
-  name: 'Advent',
+  name: 'Advent',  
+  components: {
+    StateMachine,
+    Location    
+  },  
   data() {
     return {
-        msg: "Welcome to Adventure!!",
-        info: "You are standing at the end of a road before a small brick building.",
-        act: "Need help?"    
+        current: 1,
+        act: 'in',
+        msg: 'welcome',
+        info: 'You are standing at the end of a road before a small brick building.',
+        Actions: ['in', 'out'],
+        Locations:[
+          {
+            name:'road',
+            description: "You are standing at the end of a road before a small brick building."
+          },
+          {
+            name:'house',
+            description:"You are in a house"
+          }
+        ]    
     };
   },
+  created: function() {
+     
+  },
   methods: {
-    update() {
-
-        let userObj = {
-          name: "Sammy",
-          email: "sammy@example.com",
-          plan: "Pro"
-        };
-
-        let userStr = JSON.stringify(userObj);
-
-        console.log(userStr);
-        this.info = "tada";
+    go() {
+        console.log("act:" + this.act);
+        let location = JSON.stringify(this.Locations[this.current]);
+        console.log(location);
+        //console.log(this.machine);
+        //this.machine.run(this.act);
+        //this.info = this.Locations[this.current].description;
+        this.info = (this.Locations[this.current].description);
     }
   }
 }

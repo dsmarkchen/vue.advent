@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
-    <Advent msg="Welcome to Adventure!!" 
-            info="You are standing at the end of a road before a small brick building." />
+  <div id="app">    
+    <Advent>
+    </Advent>  
   </div>
 </template>
 
@@ -11,8 +11,14 @@ import Advent from './components/Advent.vue'
 export default {
   name: 'App',
   components: {
-    Advent
+    Advent,
+  },
+  methods: {
+    changeInfo(val) {
+      console.log("info" + val);
+    }
   }
+
 }
 </script>
 
