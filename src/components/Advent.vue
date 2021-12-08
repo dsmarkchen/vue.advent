@@ -1,7 +1,7 @@
 <template>
-  <div class="advent">
+  <div >
     
-      <h1>{{msg }}</h1>
+      <h1>{{msg }} {{author.firstName}}</h1>
       <Location></Location>
       <p> {{info}}</p>
       
@@ -16,6 +16,20 @@
 <script>
 import StateMachine from './StateMachine.vue'
 import Location from './Location.vue'
+function Person(firstName, lastName) {
+  this.firstName = firstName
+  this.lastName = lastName
+}
+
+
+
+function FSM(initState, transactions)
+{
+  this.initState = initState
+  this.transactions = transactions
+}
+
+
 
 //var Nanocomponent = require('nanocomponent')
 ///var nanostate = require('nanostate')
@@ -28,6 +42,8 @@ export default {
   },  
   data() {
     return {
+        fsm : new FSM('', []),
+        author: new Person('', ''),
         current: 1,
         act: 'in',
         msg: 'welcome',
@@ -46,13 +62,37 @@ export default {
     };
   },
   created: function() {
-     
+      this.author = new Person("Mark", "Chen");
+      this.fsm = new FSM("road", {
+         road: { 
+           in: 'house' ,
+           look: 'road'
+         },
+         house: {
+           out: 'road',
+           look: 'house'
+          }
+      });
   },
-  methods: {
+  methods: {    
     go() {
         console.log("act:" + this.act);
+       
         let location = JSON.stringify(this.Locations[this.current]);
         console.log(location);
+        console.log("author: " + this.author);
+        console.log ("fsm" + this.fsm);
+        var p = this.fsm.transactions;
+        var initState = this.fsm.initState;
+        for (var key of Object.keys(p)) {
+           
+          for(var child_key of Object.keys(p[key])) {
+            console.log(key + " -> " + child_key + " -> " + p[key][child_key]);
+          }
+          
+        }
+        console.log("initState: " + initState);
+
         //console.log(this.machine);
         //this.machine.run(this.act);
         //this.info = this.Locations[this.current].description;

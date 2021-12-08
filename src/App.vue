@@ -1,24 +1,20 @@
 <template>
   <div id="app">    
-    <Advent>
-    </Advent>  
+    <Advent>   </Advent>  
   </div>
 </template>
 
 <script>
+
 import Advent from './components/Advent.vue'
+
 
 export default {
   name: 'App',
   components: {
     Advent,
   },
-  methods: {
-    changeInfo(val) {
-      console.log("info" + val);
-    }
-  }
-
+  
 }
 </script>
 
