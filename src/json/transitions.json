@@ -19,7 +19,11 @@
       
     },
     "valley": {
-      "north": "road"
+      "north": "road",
+
+      "downstream": "slit",
+      "south": "slit",
+      "down": "slit"
     },
     "hill": {
       "road": "road",
@@ -27,5 +31,11 @@
     },
     "forest": {
       "south": "road"
+    },
+    "slit": {
+       "north": "valley",
+       "up": "valley" 
+
     }
+
 }

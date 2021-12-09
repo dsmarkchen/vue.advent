@@ -23,5 +23,10 @@
     "name": "hill",
     "description": "You have walked up a hill, still in the forest.  The road slopes back down the other side of the hill.  There is a building in the distance.",
     "short": "You're at hill in road."
+  },
+  {
+    "name": "slit",
+    "description": "At your feet all the water of the stream splashes into a 2-inch slit in the rock.  Downstream the streambed is bare rock.",
+    "short": "You're at slit in streambed."
   }
 ]

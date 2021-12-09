@@ -1,7 +1,7 @@
 <template>
   <div class="aobject">
     <div class="block" >
-      <h6>Object: {{ name }}</h6>
+      <h6>{{ name }}</h6>
 
       <p>{{ description }}</p>
       <p> taken: {{taken}} <p>

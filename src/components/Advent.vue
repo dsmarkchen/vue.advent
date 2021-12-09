@@ -17,8 +17,8 @@
 
         <ul>
           <div v-for="item in AObjects" :key="item.name">
-            <li v-if="item.location == loc.name">
-              <AObject :name="item.name"></AObject>
+            <li v-if="item.location == loc.name && item.taken == false">
+              <AObject :name="item.name" :description="item.desc" :taken="item.taken"></AObject>
             </li>
           </div>
         </ul>
@@ -137,6 +137,16 @@ export default {
       if (this.act == "score" || this.act == "quit") {
         this.showscore = true;
         return;
+      }
+      if(this.act.startsWith("take")) {
+        var objname = this.act.slice(4).trim();
+        console.log("take: " + objname);
+        for (const aobj of this.AObjects) {
+        if (aobj.name == objname) {
+          aobj.taken = true;
+          break;
+        }
+      }
       }
       if (this.act == "dump") {
         this.fsm.dump();
