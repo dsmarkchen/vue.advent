@@ -1,0 +1,31 @@
+{
+    "road": {
+      "in": "house",
+      "house": "house",
+      "east": "house",
+
+      "south": "valley",
+      "down": "valley",
+
+      "north": "forest",
+
+      "west": "hill",
+      "road": "hill",
+      "up": "hill"
+    },
+    "house": {
+      "out": "road",
+      "west": "road"
+      
+    },
+    "valley": {
+      "north": "road"
+    },
+    "hill": {
+      "road": "road",
+      "east": "road"
+    },
+    "forest": {
+      "south": "road"
+    }
+}

@@ -1,121 +1,199 @@
 <template>
-  <div >
-    
-      <h1>{{msg }} {{author.firstName}}</h1>
-      <Location></Location>
-      <p> {{info}}</p>
-      
+  <div class="container">
+    <div class="advent">
+      <div class="block">
+        <h1>
+          Welcome
+          <mark v-if="author.firstName != ''">{{ author.firstName }}</mark> to
+          Adventure!!
+        </h1>
 
-      <b-form-input v-model="act"></b-form-input>
-      <b-button @click="go"> enter </b-button>
+        <ALocation
+          :name="loc.name"
+          :description="loc.description"
+          :short="loc.short"
+          :showDesc="full"
+        ></ALocation>
 
-      <StateMachine></StateMachine>
+        <ul>
+          <div v-for="item in AObjects" :key="item.name">
+            <li v-if="item.location == loc.name">
+              <AObject :name="item.name"></AObject>
+            </li>
+          </div>
+        </ul>
+
+        <Score :score="score" :showscore="showscore"> </Score>
+
+        <b-form-input v-model="act"></b-form-input>
+
+        <b-button @click="next"> enter </b-button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import StateMachine from './StateMachine.vue'
-import Location from './Location.vue'
+import ALocation from "./ALocation.vue";
+import Score from "./Score.vue";
+import AObject from "./AObject.vue";
+import locations from "../json/locations.json";
+import transitions from "../json/transitions.json";
+
 function Person(firstName, lastName) {
-  this.firstName = firstName
-  this.lastName = lastName
+  this.firstName = firstName;
+  this.lastName = lastName;
 }
 
-
-
-function FSM(initState, transactions)
-{
-  this.initState = initState
-  this.transactions = transactions
+function FSM(initState, transitions) {
+  this.initState = initState;
+  this.transitions = transitions;
+  this.state = initState;
+  this.dump = function () {
+    var p = this.transitions;
+    for (var key of Object.keys(p)) {
+      for (var child_key of Object.keys(p[key])) {
+        console.log(key + " -> " + child_key + " -> " + p[key][child_key]);
+      }
+    }
+  };
+  this.transition = function (action) {
+    var currentState = this.state;
+    var p = this.transitions;
+    for (var key of Object.keys(p)) {
+      if (key == currentState) {
+        for (var child_key of Object.keys(p[key])) {
+          if (child_key == action) {
+            this.state = p[key][child_key];
+            break;
+          }
+        }
+      }
+    }
+  };
 }
-
-
-
-//var Nanocomponent = require('nanocomponent')
-///var nanostate = require('nanostate')
 
 export default {
-  name: 'Advent',  
+  name: "Advent",
   components: {
-    StateMachine,
-    Location    
-  },  
-  data() {
+    ALocation,
+    AObject,
+    Score,
+  },
+  data: function () {
     return {
-        fsm : new FSM('', []),
-        author: new Person('', ''),
-        current: 1,
-        act: 'in',
-        msg: 'welcome',
-        info: 'You are standing at the end of a road before a small brick building.',
-        Actions: ['in', 'out'],
-        Locations:[
-          {
-            name:'road',
-            description: "You are standing at the end of a road before a small brick building."
-          },
-          {
-            name:'house',
-            description:"You are in a house"
-          }
-        ]    
+      score: 0,
+      showscore: false,
+      showObject: false,
+
+      fsm: new FSM("", []),
+      author: new Person("", ""),
+      act: "in",
+      loc: null,
+      AObjects: [],
+      objsInPlace: [],
+      Actions: ["in", "out"],
+      Locations: locations,
     };
   },
-  created: function() {
-      this.author = new Person("Mark", "Chen");
-      this.fsm = new FSM("road", {
-         road: { 
-           in: 'house' ,
-           look: 'road'
-         },
-         house: {
-           out: 'road',
-           look: 'house'
-          }
-      });
-  },
-  methods: {    
-    go() {
-        console.log("act:" + this.act);
-       
-        let location = JSON.stringify(this.Locations[this.current]);
-        console.log(location);
-        console.log("author: " + this.author);
-        console.log ("fsm" + this.fsm);
-        var p = this.fsm.transactions;
-        var initState = this.fsm.initState;
-        for (var key of Object.keys(p)) {
-           
-          for(var child_key of Object.keys(p[key])) {
-            console.log(key + " -> " + child_key + " -> " + p[key][child_key]);
-          }
-          
-        }
-        console.log("initState: " + initState);
+  created: function () {
+    this.showObject = false;
+    this.score = 20;
+    this.full = true;
+    this.author = new Person("", "");
+    this.AObjects = [
+      {
+        name: "lamp",
+        desc: "lanturn",
+        location: "house",
+        taken: false,
+      },
+      {
+        name: "keys",
+        desc: "",
+        location: "house",
+        taken: false,
+      },
+      {
+        name: "bottle",
+        desc: "a bottle of water",
+        location: "house",
+        taken: false,
+      },
+      {
+        name: "cage",
+        desc: "Wicker cage",
+        location: "cobbles",
+        taken: false,
+      },
+    ];
 
-        //console.log(this.machine);
-        //this.machine.run(this.act);
-        //this.info = this.Locations[this.current].description;
-        this.info = (this.Locations[this.current].description);
-    }
-  }
-}
+    this.fsm = new FSM("road", transitions);
+    this.loc = JSON.parse(JSON.stringify(this.Locations[0]));
+  },
+  methods: {
+    next() {
+      console.log("act:" + this.act);
+      if (this.act == "score" || this.act == "quit") {
+        this.showscore = true;
+        return;
+      }
+      if (this.act == "dump") {
+        this.fsm.dump();
+        return;
+      }
+
+      console.log("location: " + location);
+      console.log("author: " + this.author);
+      console.log("fsm" + this.fsm);
+
+      console.log("initState: " + this.fsm.initState);
+      this.fsm.transition(this.act);
+      console.log("state: " + this.fsm.state);
+      for (const loc of this.Locations) {
+        if (loc.name == this.fsm.state) {
+          this.loc.name = loc.name;
+          this.loc.description = loc.description;
+          this.loc.short = loc.short;
+          break;
+        }
+      }
+    },
+  },
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
+#advent .block {
+  color: #e3e3e4;
 }
-ul {
+#advent .block h1 {
+  font-family: "Roboto", sans-serif;
+  font-weight: 100;
+  font-size: 45px;
+  line-height: 60px;
+  letter-spacing: 10px;
+  padding-bottom: 45px;
+}
+#advent .block p {
+  font-size: 23px;
+  line-height: 40px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  letter-spacing: 3px;
+}
+
+.advent .block ul {
+  padding-top: 35px;
+  line-height: 27px;
+/*  margin-left: 25px; */
   list-style-type: none;
-  padding: 0;
+
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
+.advent .block ul li {
+	text-indent: -1.4em;
+    color: #7B7B7B;
 }
-a {
-  color: #42b983;
-}
+
 </style>
