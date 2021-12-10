@@ -13,6 +13,9 @@
           :description="loc.description"
           :short="loc.short"
           :showDesc="full"
+          :lighted="loc.lighted"
+          :liquid="loc.liquid"
+          :birdhint="loc.birdhint"
         ></ALocation>
 
         <ul>
@@ -228,6 +231,9 @@ export default {
           this.loc.description = loc.description;
           this.loc.short = loc.short;
           this.loc.condition = loc.condition;
+          this.loc.lighted = loc.lighted;
+          this.loc.liquid = loc.liquid;
+          this.loc.birdhint = loc.birdhint;
 
           console.log("location: " + loc.name + " condition: " + loc.condition);
           this.instruction = "";

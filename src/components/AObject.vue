@@ -1,18 +1,20 @@
 <template>
   <div class="aobject">
-    <div class="block" >
-      <h6 v-show="showTitle">{{ name }} : {{desc}}</h6>      
-      <p v-show="showTaken"> taken: {{taken}} <p>
+    <div class="block">
+      <h6 v-show="showTitle">{{ name }} : {{ desc }}</h6>
+      <p v-show="showTaken">taken: {{ taken }}</p>
       <ul>
         <div v-for="(note, index) in notes" v-bind:key="note">
-          <li v-if="index == current"> 
-            {{note}} 
+          <li v-if="index == current">
+            <div v-if="taken == undefined && locked == undefined">{{ note }} </div>
+            <div v-if="taken != undefined">{{note}} <mark>taken: {{ taken }}</mark></div>
+            <div v-if="locked != undefined">{{note}} <mark> locked: {{ locked }} </mark> </div>
+          
+
           </li>
         </div>
-        </ul>
-      <p>{{ location }}</p>
-      <p v-if="taken != undefined"> taken: {{taken}}</p>
-      <p v-if="locked != undefined"> locked: {{locked}}</p>
+      </ul>
+      <p>{{ location }} </p>
     </div>
   </div>
 </template>
@@ -32,7 +34,7 @@ export default {
     },
     location: {
       type: String,
-    },    
+    },
     taken: {
       type: Boolean,
     },
@@ -40,26 +42,31 @@ export default {
       type: Boolean,
     },
     current: {
-      type: Number
-    }
+      type: Number,
+    },
   },
-  data: function() {
-    return {      
+  data: function () {
+    return {
       showTitle: false,
-      showTaken: false
-    }
-  }
+      showTaken: false,
+    };
+  },
 };
 </script>
 
 <style>
 .aobject .block {
-  color: #7b7b7b; 
+  color: #7b7b7b;
 }
-.aobject .block h1,h2,h3,h4,h5,h6 {
+.aobject .block h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: "Roboto", sans-serif;
 }
-.aobject .block p {  
+.aobject .block p {
   padding-left: 20px;
   font-size: 15px;
   line-height: 28px;

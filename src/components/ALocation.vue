@@ -3,10 +3,14 @@
     <div class="block" v-if="showDesc">
       <h1>{{ name }}</h1>
       <p>{{ description }}</p>
+      <mark v-if="lighted==false"> dark </mark>
+      <mark v-if="birdhint==true"> bird hint </mark>
     </div>
     <div class="block" v-else>
       <h1>{{ name }}</h1>
       <p>{{ short }}</p>
+      <mark v-if="lighted==false"> dark </mark>
+      <mark v-if="birdhint==true"> bird hint </mark>
     </div>
   </div>
 </template>
@@ -26,6 +30,19 @@ export default {
     },
     short: {
       type: String,
+    },
+    lighted : {
+      type: Boolean,
+      default: function() { return false; },
+    },
+
+    liquid: {
+      type: Boolean,
+      default: function() { return false; }
+    },
+    birdhint: {
+      type:Boolean,
+      default: function() { return false; }
     },
     condition: {
       type: String,
