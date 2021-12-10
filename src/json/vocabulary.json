@@ -1,0 +1,43 @@
+{
+    "motions" : [
+        "in", 
+        "out",
+        "enter",
+        "down", "downstream",
+        "up",
+        "north", 
+        "south",
+        "west",
+        "east",
+        "take",
+        "drop",
+        "score",
+        "pit",
+        "look",
+        "help",
+        "xyzzy"
+    ],
+    "locations" : [
+        "road",
+        "house",
+        "valley",
+        "hill",
+        "forest",
+        "slit",
+        "outside",
+        "inside",
+        "cobbles",
+        "debris",
+        "awk",
+        "bird",
+        "spit"
+    ],
+    "objects": [
+        "food",
+        "bottle",
+        "keys",
+        "lamp",
+        "grate", "grate_",
+        "cage"
+    ]
+}

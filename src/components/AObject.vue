@@ -1,11 +1,18 @@
 <template>
   <div class="aobject">
     <div class="block" >
-      <h6>{{ name }}</h6>
-
-      <p>{{ description }}</p>
-      <p> taken: {{taken}} <p>
+      <h6 v-show="showTitle">{{ name }} : {{desc}}</h6>      
+      <p v-show="showTaken"> taken: {{taken}} <p>
+      <ul>
+        <div v-for="(note, index) in notes" v-bind:key="note">
+          <li v-if="index == current"> 
+            {{note}} 
+          </li>
+        </div>
+        </ul>
       <p>{{ location }}</p>
+      <p v-if="taken != undefined"> taken: {{taken}}</p>
+      <p v-if="locked != undefined"> locked: {{locked}}</p>
     </div>
   </div>
 </template>
@@ -17,16 +24,30 @@ export default {
     name: {
       type: String,
     },
-    description: {
+    desc: {
       type: String,
+    },
+    notes: {
+      type: Array,
     },
     location: {
       type: String,
-    },
+    },    
     taken: {
       type: Boolean,
     },
-
+    locked: {
+      type: Boolean,
+    },
+    current: {
+      type: Number
+    }
+  },
+  data: function() {
+    return {      
+      showTitle: false,
+      showTaken: false
+    }
   }
 };
 </script>
@@ -39,6 +60,7 @@ export default {
   font-family: "Roboto", sans-serif;
 }
 .aobject .block p {  
+  padding-left: 20px;
   font-size: 15px;
   line-height: 28px;
 }

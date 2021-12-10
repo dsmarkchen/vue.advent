@@ -64,10 +64,10 @@ export default {
 </script>
 
 <style>
-#score .block {
+.score .block {
   color: #e3e3e4;
 }
-#score .block h1 {
+.score .block h1 {
   font-family: "Roboto", sans-serif;
   font-weight: 100;
   font-size: 45px;
@@ -75,7 +75,7 @@ export default {
   letter-spacing: 10px;
   padding-bottom: 45px;
 }
-#score .block p {
+.score .block p {
   font-size: 23px;
   line-height: 40px;
   font-family: "Roboto", sans-serif;

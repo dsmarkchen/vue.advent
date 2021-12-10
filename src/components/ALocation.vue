@@ -18,10 +18,16 @@ export default {
     name: {
       type: String,
     },
+    q: {
+      type: Number
+    },
     description: {
       type: String,
     },
     short: {
+      type: String,
+    },
+    condition: {
       type: String,
     },
     showDesc: {
@@ -53,4 +59,11 @@ export default {
   font-weight: 300;
   letter-spacing: 3px;
 }
+
+.alocation .block ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
 </style>

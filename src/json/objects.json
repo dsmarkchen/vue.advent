@@ -1,0 +1,81 @@
+[
+  {
+    "name": "lamp",
+    "desc": "lanturn",
+    "notes": [
+      "There is a shiny brass lamp nearby.",
+      "There is a lamp shining nearby."
+    ],
+    "location": "house",
+    "taken": false,
+    "current": 0
+  },
+  {
+    "name": "food",
+    "desc": "Tasty food",
+    "notes": ["there is food here."],
+    "location": "house",
+    "taken": false,
+    "current": 0
+  },
+  {
+    "name": "keys",
+    "desc": "Set of keys",
+    "notes": ["There are some keys on the ground here."],
+    "location": "house",
+    "taken": false,
+    "current": 0
+  },
+  {
+    "name": "bottle",
+    "desc": "Small bottle",
+    "notes": [
+      "there is a bottle of water here.",
+      "There is an empty bottle here.",
+      "There is a bottle of oil here."
+    ],
+    "location": "house",
+    "taken": false,
+    "current": 0
+  },
+  {
+    "name": "cage",
+    "desc": "Wicker cage",
+    "notes": ["There is a small wicker cage discarded nearby."],
+    "location": "cobbles",
+    "taken": false,
+    "current": 0
+  },
+
+  {
+    "name": "grate",
+    "desc": "",
+    "notes": [
+        "The grate is locked." , 
+        "The grate is open."
+    ],
+    "location": "outside",    
+    "locked": true,
+    "current": 0
+  },
+  {
+    "name": "grate_",
+    "desc": "",
+    "notes": [
+        "The grate is locked." , 
+        "The grate is open."
+    ],
+    "location": "inside",    
+    "locked": false,
+    "current": 0
+  },
+  {
+    "name": "snake",
+    "desc": "",
+    "notes": [
+        "A huge green fierce snake bars the way!"         
+    ],
+    "location": "hmk",
+    "current":0
+  }
+]

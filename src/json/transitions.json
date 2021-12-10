@@ -1,41 +1,194 @@
 {
-    "road": {
-      "in": "house",
-      "house": "house",
-      "east": "house",
+  "road": {
+    "in": "house",
+    "house": "house",
+    "east": "house",
 
-      "south": "valley",
-      "down": "valley",
+    "south": "valley",
+    "down": "valley",
 
-      "north": "forest",
+    "north": "forest",
 
-      "west": "hill",
-      "road": "hill",
-      "up": "hill"
-    },
-    "house": {
-      "out": "road",
-      "west": "road"
-      
-    },
-    "valley": {
-      "north": "road",
+    "west": "hill",
+    "road": "hill",
+    "up": "hill"
+  },
+  "house": {
+    "out": "road",
+    "west": "road",
 
-      "downstream": "slit",
-      "south": "slit",
-      "down": "slit"
-    },
-    "hill": {
-      "road": "road",
-      "east": "road"
-    },
-    "forest": {
-      "south": "road"
-    },
-    "slit": {
-       "north": "valley",
-       "up": "valley" 
+    "xyzzy": "debris"
+  },
+  "valley": {
+    "north": "road",
 
-    }
+    "downstream": "slit",
+    "south": "slit",
+    "down": "slit"
+  },
+  "hill": {
+    "road": "road",
+    "east": "road"
+  },
+  "forest": {
+    "south": "road"
+  },
+  "slit": {
+    "north": "valley",
+    "up": "valley",
+
+    "down": "outside"
+  },
+  "outside": {
+    "north": "slit",
+    "enter": "inside"
+  },
+  "inside": {
+    "_comment": "_q9",
+    "out": "outside",
+
+    "in": "cobbles",
+    "west": "cobbles",
+    "crawl": "cobbles"
+  },
+  "cobbles": {
+    "_comment": "_q10",
+    "out": "inside",
+    "east": "inside",
+
+    "in": "debris",
+    "west": "debris"
+  },
+  "debris" : {
+    "_comment": "_q11",
+    "east": "cobbles",
+    "up": "cobbles",
+
+    "canyon": "awk",
+    "in": "awk",
+    "west": "awk",
+    "xyzzy": "house",
+    "pit": "spit"
+  },
+  "awk": { 
+    "_comment": "_q12",
+    "east": "debris",
+
+    "in": "bird",
+    "up": "bird",
+    "west": "bird",
+
+    "pit": "spit"
+  },
+  "bird": { 
+    "_comment": "_q13",
+    "entrance": "inside",
+
+    "canyon": "awk",
+    "east": "awk",
+
+    "debris": "debris",
+    
+    "pit": "spit",
+    "west": "spit"
+  },
+  "spit": { 
+    "_comment": "_q14",
+    "entrance": "inside",
+    "debris": "debris",
+    "east": "bird",
+    "down": "emist",
+    "west": "crack"
+  },
+  "emist" : { 
+    "_comment": "_q15",
+    "south": "nugget",
+    "west": "efiss",
+
+    "down": "hmk",
+    "north": "hmk",
+
+    "east": "cant",
+    
+    "up": "spit",
+    "y2": "jumble"
+  },
+  "wfiss": {
+    "_comment": "_q27",
+
+    "forward": "lose",
+    "over": "efiss",
+    "west": "wmist"
+
+  },
+  "wmist": {
+    "_comment": "_q41",
+
+    "south": "like1",
+    "up": "like1",
+    "climb": "like1",
+
+    "east": "wfiss",
+
+    "north": "duck",
+    
+    "west": "elong",
+    "crawl": "elong"
+  },
+
+  "like1": {
+    "_comment": "_q42",
+
+    "north": "like1",
+    "east": "like2",
+    "south": "like4",    
+    "west": "like11"
+  },
+  "like2": {
+    "_comment": "_q43",
+
+    "west": "like1",    
+    "south": "like3",    
+    "east": "like4"
+  },
+  
+  "like3": {
+    "_comment": "_q44",
+
+    "east": "like2",
+    "down": "dead5",    
+    "south": "like6",    
+    "north": "dead9"    
+  },
+
+  "like4": {
+    "_comment": "_q45",
+
+    "west": "like1",        
+    "north": "like2",        
+    "east": "like3",
+    "south": "like4",
+
+    "up": "like14",
+    "down": "like14"
+  },
+
+  "like5": {
+    "_comment": "_q49",
+
+    "west": "like7",        
+    "east": "like6"
+  },
+
+
+  "like11": {
+    "_comment": "_q80",
+
+    "north": "like1",
+    "west": "like11",
+    "south": "like11",
+    "east": "dead1"
+  }
+
 
 }

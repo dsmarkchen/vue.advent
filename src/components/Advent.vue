@@ -17,17 +17,46 @@
 
         <ul>
           <div v-for="item in AObjects" :key="item.name">
-            <li v-if="item.location == loc.name && item.taken == false">
-              <AObject :name="item.name" :description="item.desc" :taken="item.taken"></AObject>
+            <li v-if="(item.location == loc.name) && (item.locked != undefined)">
+              <AObject
+                :name="item.name"
+                :desc="item.desc"
+                :notes="item.notes"
+                :taken="item.taken"
+                :locked="item.locked"
+                :current="item.current"
+              ></AObject>
+            </li>
+
+            <li v-if="(item.location == loc.name) && (item.taken != undefined)">
+              <AObject
+                :name="item.name"
+                :desc="item.desc"
+                :notes="item.notes"
+                :taken="item.taken"
+                :locked="item.locked"
+                :current="item.current"
+              ></AObject>
             </li>
           </div>
         </ul>
 
         <Score :score="score" :showscore="showscore"> </Score>
 
-        <b-form-input v-model="act"></b-form-input>
+        <div>
+          <b-form-group
+            :description="instruction"
+            label=""
+            label-for="input-1"
+            valid-feedback=""
+            :invalid-feedback="input_invalid"
+            :state="input_state"
+          >
+            <b-form-input id="input-1" v-model="act" v-on:keyup.enter="next" trim></b-form-input>
+          </b-form-group>
+        </div>
 
-        <b-button @click="next"> enter </b-button>
+       
       </div>
     </div>
   </div>
@@ -37,8 +66,10 @@
 import ALocation from "./ALocation.vue";
 import Score from "./Score.vue";
 import AObject from "./AObject.vue";
+import objects from "../json/objects.json";
 import locations from "../json/locations.json";
 import transitions from "../json/transitions.json";
+import vocabulary from "../json/vocabulary.json";
 
 function Person(firstName, lastName) {
   this.firstName = firstName;
@@ -82,6 +113,7 @@ export default {
   },
   data: function () {
     return {
+      instruction: "Let us know what you wanna do",
       score: 0,
       showscore: false,
       showObject: false,
@@ -90,44 +122,43 @@ export default {
       author: new Person("", ""),
       act: "in",
       loc: null,
-      AObjects: [],
-      objsInPlace: [],
+      AObjects: [],      
       Actions: ["in", "out"],
       Locations: locations,
     };
+  },
+  computed: {
+    input_state() {
+      let dict = vocabulary;
+      let found = false;
+      let words = this.act.split(" ");
+      words.forEach((word) => {
+        for (var key of Object.keys(dict)) {
+          if (dict[key].indexOf(word) >= 0) {
+            found = true;
+            break;
+          }
+        }
+        if (found == false) {
+          return false;
+        }
+      });
+      return found;
+    },
+    input_invalid() {
+      if (this.act.length > 0) {
+        return "Enter a meaningful word.";
+      }
+      return "Please enter something.";
+    },
   },
   created: function () {
     this.showObject = false;
     this.score = 20;
     this.full = true;
     this.author = new Person("", "");
-    this.AObjects = [
-      {
-        name: "lamp",
-        desc: "lanturn",
-        location: "house",
-        taken: false,
-      },
-      {
-        name: "keys",
-        desc: "",
-        location: "house",
-        taken: false,
-      },
-      {
-        name: "bottle",
-        desc: "a bottle of water",
-        location: "house",
-        taken: false,
-      },
-      {
-        name: "cage",
-        desc: "Wicker cage",
-        location: "cobbles",
-        taken: false,
-      },
-    ];
-
+    this.AObjects = objects;
+    
     this.fsm = new FSM("road", transitions);
     this.loc = JSON.parse(JSON.stringify(this.Locations[0]));
   },
@@ -138,15 +169,44 @@ export default {
         this.showscore = true;
         return;
       }
-      if(this.act.startsWith("take")) {
+      if (this.act.startsWith("take") || this.act.startsWith("drop")) {
         var objname = this.act.slice(4).trim();
         console.log("take: " + objname);
         for (const aobj of this.AObjects) {
-        if (aobj.name == objname) {
-          aobj.taken = true;
-          break;
+          if (aobj.name == objname) {
+            aobj.taken = true;
+            break;
+          }
         }
+        return;
       }
+      if(this.act.startsWith("open")) {
+        var obj2name = this.act.slice(4).trim();
+        console.log("open: " + obj2name);
+
+        // check keys
+        if(obj2name == "grate") { 
+          for (const aobj of this.AObjects) {
+            if (aobj.name == "keys") {
+              if(aobj.taken == false) {
+                console.log("no keys");
+                this.instruction = "no keys";
+                return;
+              }
+            }
+          }
+        }
+
+        
+        for (const aobj of this.AObjects) {
+          if (aobj.name == obj2name) {
+            aobj.current = 1;
+            aobj.locked = false;
+            break;
+          }
+        }
+
+        return;
       }
       if (this.act == "dump") {
         this.fsm.dump();
@@ -156,15 +216,21 @@ export default {
       console.log("location: " + location);
       console.log("author: " + this.author);
       console.log("fsm" + this.fsm);
-
       console.log("initState: " + this.fsm.initState);
       this.fsm.transition(this.act);
+      
       console.log("state: " + this.fsm.state);
+
       for (const loc of this.Locations) {
         if (loc.name == this.fsm.state) {
+
           this.loc.name = loc.name;
           this.loc.description = loc.description;
           this.loc.short = loc.short;
+          this.loc.condition = loc.condition;
+
+          console.log("location: " + loc.name + " condition: " + loc.condition);
+          this.instruction = "";
           break;
         }
       }
@@ -175,10 +241,17 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-#advent .block {
-  color: #e3e3e4;
+.advent {
+  padding:40px;
+  width: 100%;
+  min-height: 150px;
+  background-color: white;
+  border-bottom: 1px dotted #ddd;
 }
-#advent .block h1 {
+.advent .block {
+  color: #7b7b7b;
+}
+.advent .block h1 {
   font-family: "Roboto", sans-serif;
   font-weight: 100;
   font-size: 45px;
@@ -186,7 +259,7 @@ export default {
   letter-spacing: 10px;
   padding-bottom: 45px;
 }
-#advent .block p {
+.advent .block p {
   font-size: 23px;
   line-height: 40px;
   font-family: "Roboto", sans-serif;
@@ -195,15 +268,9 @@ export default {
 }
 
 .advent .block ul {
-  padding-top: 35px;
-  line-height: 27px;
-/*  margin-left: 25px; */
-  list-style-type: none;
-
-}
-.advent .block ul li {
-	text-indent: -1.4em;
-    color: #7B7B7B;
+  padding: 0;
+  margin: 0;
+  list-style: none;
 }
 
 </style>
