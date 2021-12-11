@@ -15,28 +15,36 @@
           :showDesc="full"
           :lighted="loc.lighted"
           :liquid="loc.liquid"
+          :cavehint="loc.cavehint"
           :birdhint="loc.birdhint"
+          :snakehint="loc.snakehint"
+          :twisthint="loc.twisthint"
+          :darkhint="loc.darkhint"
+          :witthint="loc.witthint"
+          :isDark="is_dark"
         ></ALocation>
 
         <ul>
           <div v-for="item in AObjects" :key="item.name">
-            <li v-if="(item.location == loc.name) && (item.locked != undefined)">
+            <li v-if="item.location == loc.name && item.locked != undefined">
               <AObject
                 :name="item.name"
                 :desc="item.desc"
                 :notes="item.notes"
                 :taken="item.taken"
+                :using="item.using"
                 :locked="item.locked"
                 :current="item.current"
               ></AObject>
             </li>
 
-            <li v-if="(item.location == loc.name) && (item.taken != undefined)">
+            <li v-if="item.location == loc.name && item.taken != undefined">
               <AObject
                 :name="item.name"
                 :desc="item.desc"
                 :notes="item.notes"
                 :taken="item.taken"
+                :using="item.using"
                 :locked="item.locked"
                 :current="item.current"
               ></AObject>
@@ -55,11 +63,14 @@
             :invalid-feedback="input_invalid"
             :state="input_state"
           >
-            <b-form-input id="input-1" v-model="act" v-on:keyup.enter="next" trim></b-form-input>
+            <b-form-input
+              id="input-1"
+              v-model="act"
+              v-on:keyup.enter="next"
+              trim
+            ></b-form-input>
           </b-form-group>
         </div>
-
-       
       </div>
     </div>
   </div>
@@ -120,12 +131,12 @@ export default {
       score: 0,
       showscore: false,
       showObject: false,
-
+      is_dark: false,
       fsm: new FSM("", []),
       author: new Person("", ""),
       act: "in",
       loc: null,
-      AObjects: [],      
+      AObjects: [],
       Actions: ["in", "out"],
       Locations: locations,
     };
@@ -161,19 +172,82 @@ export default {
     this.full = true;
     this.author = new Person("", "");
     this.AObjects = objects;
-    
+
     this.fsm = new FSM("road", transitions);
     this.loc = JSON.parse(JSON.stringify(this.Locations[0]));
   },
   methods: {
+    isLampOn() {
+      let onname = "lamp";
+      for (const aobj of this.AObjects) {
+        if (aobj.name == onname) {
+          console.log("lamp: taken: " + aobj.taken + ",using:" + aobj.using);
+          if(aobj.using == undefined || aobj.taken == false) {
+            return false;
+          }
+          else if (aobj.using) {
+            return true; // taken and use
+          } else {
+            return false;
+          }
+        }
+      }
+      return false;
+    },
     next() {
-      console.log("act:" + this.act);
-      if (this.act == "score" || this.act == "quit") {
+      let act = this.act;
+      if(this.act.length == 1) {
+          if(this.act == "n") {
+            act = "north";
+          }
+          if(this.act == "s") {
+            act = "south";
+          }
+
+          if(this.act == "e") {
+            act = "east";
+          }
+                    
+          if(this.act == "w") {
+            act = "east";
+          }
+
+
+      }
+      console.log("act:" + act);      
+
+      if (act == "score" || act == "quit") {
         this.showscore = true;
         return;
       }
-      if (this.act.startsWith("take") || this.act.startsWith("drop")) {
-        var objname = this.act.slice(4).trim();
+
+      if (act.startsWith("on")) {
+        var onname = act.slice(2).trim();
+        console.log("use (on): " + onname);
+        for (const aobj of this.AObjects) {
+          if (aobj.name == onname) {
+            if(aobj.taken)
+              aobj.using = true;
+            break;
+          }
+        }        
+      }
+
+      if (act.startsWith("off")) {
+        var offname = this.act.slice(3).trim();
+        console.log("use (off): " + onname);
+        for (const aobj of this.AObjects) {
+          if (aobj.name == offname) {
+            if(aobj.taken)
+              aobj.using = false;
+            break;
+          }
+        }
+        
+      }
+
+      if (this.act.startsWith("take")) {
+        var objname = act.slice(4).trim();
         console.log("take: " + objname);
         for (const aobj of this.AObjects) {
           if (aobj.name == objname) {
@@ -183,15 +257,27 @@ export default {
         }
         return;
       }
-      if(this.act.startsWith("open")) {
-        var obj2name = this.act.slice(4).trim();
+      if (this.act.startsWith("drop")) {
+        var dropname = act.slice(4).trim();
+        console.log("drop: " + dropname);
+        for (const aobj of this.AObjects) {
+          if (aobj.name == dropname) {
+            aobj.taken = false;
+            break;
+          }
+        }
+        return;
+      }
+
+      if (act.startsWith("open")) {
+        var obj2name = act.slice(4).trim();
         console.log("open: " + obj2name);
 
         // check keys
-        if(obj2name == "grate") { 
+        if (obj2name == "grate") {
           for (const aobj of this.AObjects) {
             if (aobj.name == "keys") {
-              if(aobj.taken == false) {
+              if (aobj.taken == false) {
                 console.log("no keys");
                 this.instruction = "no keys";
                 return;
@@ -200,7 +286,6 @@ export default {
           }
         }
 
-        
         for (const aobj of this.AObjects) {
           if (aobj.name == obj2name) {
             aobj.current = 1;
@@ -211,31 +296,34 @@ export default {
 
         return;
       }
-      if (this.act == "dump") {
+      if (act == "dump") {
         this.fsm.dump();
         return;
       }
 
-      console.log("location: " + location);
-      console.log("author: " + this.author);
       console.log("fsm" + this.fsm);
       console.log("initState: " + this.fsm.initState);
       this.fsm.transition(this.act);
-      
+
       console.log("state: " + this.fsm.state);
 
       for (const loc of this.Locations) {
         if (loc.name == this.fsm.state) {
-
-          this.loc.name = loc.name;
-          this.loc.description = loc.description;
-          this.loc.short = loc.short;
-          this.loc.condition = loc.condition;
-          this.loc.lighted = loc.lighted;
-          this.loc.liquid = loc.liquid;
-          this.loc.birdhint = loc.birdhint;
-
-          console.log("location: " + loc.name + " condition: " + loc.condition);
+          this.loc = Object.assign({}, loc);
+          
+          if (this.loc.lighted == true) {
+            this.is_dark = false;
+          } 
+          else {
+            if(this.isLampOn()) {
+              this.is_dark = false;
+            }
+            else {
+              this.is_dark = true;
+            }
+          }
+          console.log("is_dark: " + this.is_dark);
+          console.log("location: " + loc.name + ", lighted: " + loc.lighted);
           this.instruction = "";
           break;
         }
@@ -248,7 +336,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .advent {
-  padding:40px;
+  padding: 40px;
   width: 100%;
   min-height: 150px;
   background-color: white;
@@ -278,5 +366,4 @@ export default {
   margin: 0;
   list-style: none;
 }
-
 </style>

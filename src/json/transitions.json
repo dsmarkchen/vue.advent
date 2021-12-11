@@ -1,78 +1,124 @@
 {
   "road": {
+    "enter": "house",
     "in": "house",
     "house": "house",
     "east": "house",
 
     "south": "valley",
     "down": "valley",
+    "stream": "valley",
 
     "north": "forest",
+    "woods": "forest",
 
     "west": "hill",
     "road": "hill",
-    "up": "hill"
+    "up": "hill",
+
+    "q": 1
   },
+  "hill": {
+    "road": "road",
+    "east": "road",
+    "down": "road",
+
+    "q":  2
+  },
+
   "house": {
     "out": "road",
     "west": "road",
 
-    "xyzzy": "debris"
+    "xyzzy": "debris",
+
+    "q":  3
   },
   "valley": {
     "north": "road",
 
+    "east": "forest",
+    "west": "forest",
+    "up": "forest",
+
     "downstream": "slit",
     "south": "slit",
-    "down": "slit"
-  },
-  "hill": {
-    "road": "road",
-    "east": "road"
+    "down": "slit",
+
+    "q": 4
   },
   "forest": {
-    "south": "road"
+    "east": "valley",
+    "down": "valley",
+
+    "north": "forest",
+
+    "south": "road",
+
+    "q": 5
+  },
+  "woods":{
+    "east": "valley",
+    "west": "valley",
+    "down": "valley",
+
+    "north": "road",
+    "q": 6
   },
   "slit": {
     "north": "valley",
     "up": "valley",
 
-    "down": "outside"
+    "down": "outside",
+
+    "q": 7
   },
   "outside": {
     "north": "slit",
-    "enter": "inside"
+    "enter": "inside",
+
+    "woods":"forest",
+    "east": "forest",
+    "west": "forest",
+    "south":"forest",
+
+
+    "q": 8
   },
-  "inside": {
-    "_comment": "_q9",
+  "inside": {    
     "out": "outside",
 
     "in": "cobbles",
     "west": "cobbles",
-    "crawl": "cobbles"
+    "crawl": "cobbles",
+
+    "q": 9
   },
-  "cobbles": {
-    "_comment": "_q10",
+  "cobbles": {    
     "out": "inside",
     "east": "inside",
 
     "in": "debris",
-    "west": "debris"
-  },
-  "debris" : {
-    "_comment": "_q11",
-    "east": "cobbles",
-    "up": "cobbles",
+    "west": "debris",
 
-    "canyon": "awk",
+    "q": 10
+  },
+  "debris" : {    
+    "east": "cobbles",
+    
+    "up": "awk",    
     "in": "awk",
     "west": "awk",
+
     "xyzzy": "house",
-    "pit": "spit"
+    "pit": "spit",
+
+    "q": "11"
   },
   "awk": { 
     "_comment": "_q12",
     "east": "debris",
+    "down": "debris",
 
     "in": "bird",
     "up": "bird",
@@ -100,8 +146,7 @@
     "down": "emist",
     "west": "crack"
   },
-  "emist" : { 
-    "_comment": "_q15",
+  "emist" : {     
     "south": "nugget",
     "west": "efiss",
 
@@ -111,19 +156,18 @@
     "east": "cant",
     
     "up": "spit",
-    "y2": "jumble"
-  },
-  "wfiss": {
-    "_comment": "_q27",
+    "y2": "jumble",
 
+    "q": "15"
+  },
+  "wfiss": {    
     "forward": "lose",
     "over": "efiss",
-    "west": "wmist"
+    "west": "wmist",
 
+    "q": 27
   },
-  "wmist": {
-    "_comment": "_q41",
-
+  "wmist": {    
     "south": "like1",
     "up": "like1",
     "climb": "like1",
@@ -133,7 +177,9 @@
     "north": "duck",
     
     "west": "elong",
-    "crawl": "elong"
+    "crawl": "elong",
+
+    "q": 41
   },
 
   "like1": {
@@ -162,33 +208,48 @@
   },
 
   "like4": {
-    "_comment": "_q45",
-
     "west": "like1",        
     "north": "like2",        
     "east": "like3",
     "south": "like4",
 
     "up": "like14",
-    "down": "like14"
+    "down": "like14",
+
+    "q": 45
   },
 
   "like5": {
-    "_comment": "_q49",
-
     "west": "like7",        
-    "east": "like6"
+    "east": "like6",
+
+    "q": 49
   },
 
 
-  "like11": {
-    "_comment": "_q80",
-
+  "like11": {    
     "north": "like1",
     "west": "like11",
     "south": "like11",
-    "east": "dead1"
-  }
+    "east": "dead1",
 
+    "q": 80
+  },
+
+  "proom": {
+    "west": "ppass",
+
+    "plover": "y2",
+    "NE": "droom",
+    "dark": "droom",
+
+    "q": 100
+  },
+  "droom": {
+    "south": "proom",
+
+    "q": 101
+  }
+  
 
 }

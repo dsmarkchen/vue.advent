@@ -1,5 +1,14 @@
 [
   {
+    "name": "rug",
+    "desc": "Persian rug",
+    "notes": [
+      "There is a Persian rug spread out on the floor!",
+      "The dragon is sprawled out on a Persian rug!!"
+    ],
+    "current" : 0
+  },
+  {
     "name": "lamp",
     "desc": "lanturn",
     "notes": [
@@ -13,7 +22,9 @@
   {
     "name": "food",
     "desc": "Tasty food",
-    "notes": ["there is food here."],
+    "notes": [
+        "There is food here."
+    ],
     "location": "house",
     "taken": false,
     "current": 0
@@ -46,36 +57,101 @@
     "taken": false,
     "current": 0
   },
+  {
+    "name": "rod",
+    "desc": "Black rod",
+    "notes": ["A three-foot black rod with a rusty star on an end lies nearby."],
+    "location":"debris" ,
+    "taken": false,
+    "current": 0
+  },
+  {
+    "name": "rod2",
+    "desc": "Black rod",
+    "notes": ["A three-foot black rod with a rusty mark on an end lies nearby."],
+    "location":"limbo" ,
+    "taken": false,
+    "current": 0
+  },
+
+  {
+    "name": "bird",
+    "desc": "Little bird in cage.",
+    "notes": [
+      "A cheerful little bird is sitting here singing.",
+      "There is a little bird in the cage."
+    ],
+    "location": "bird",
+    "taken": false,
+    "current": 0
+  },
 
   {
     "name": "grate",
     "desc": "",
-    "notes": [
-        "The grate is locked." , 
-        "The grate is open."
-    ],
-    "location": "outside",    
+    "notes": ["The grate is locked.", "The grate is open."],
+    "location": "outside",
     "locked": true,
     "current": 0
   },
+  
   {
     "name": "grate_",
     "desc": "",
-    "notes": [
-        "The grate is locked." , 
-        "The grate is open."
-    ],
-    "location": "inside",    
+    "notes": ["The grate is locked.", "The grate is open."],
+    "location": "inside",
     "locked": false,
-    "current": 0
+    "current": 1
   },
   {
     "name": "snake",
     "desc": "",
     "notes": [
-        "A huge green fierce snake bars the way!"         
+        "A huge green fierce snake bars the way!"
     ],
     "location": "hmk",
-    "current":0
+    "current": 0
+  },
+
+  {
+    "name": "clam",
+    "desc": "Giant clam > GRUNT!",
+    "notes": [
+        "There is an enormous clam here with its shell tightly closed."
+    ],
+    "location": "shell",
+    "current": 0
+  },
+  {
+    "name": "tablet",
+    "desc": "",
+    "notes": [
+        "A massive stone tablet embedded in the wall reads:\"CONGRATULATIONS ON BRINGING LIGHT INTO THE DARK-ROOM!\""
+    ],
+    "location": "droom",
+    "current": 0
+  },
+  {
+    "name": "axe",
+    "desc": "Dwarf's axe",
+    "notes": [ 
+        "There is a little axe here.",
+        "There is a little axe lying beside the bear."
+    ],
+    "location": "limbo",
+    "current": 0
+  },
+
+  {
+      "name": "water",
+      "desc": "Water in the bottle",
+      "location": "limbo"    
+  },
+
+  {
+    "name": "oil",
+    "desc": "Oil in the bottle",
+    "location": "limbo"    
   }
+
 ]

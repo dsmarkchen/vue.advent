@@ -5,12 +5,14 @@
       <p v-show="showTaken">taken: {{ taken }}</p>
       <ul>
         <div v-for="(note, index) in notes" v-bind:key="note">
-          <li v-if="index == current">
-            <div v-if="taken == undefined && locked == undefined">{{ note }} </div>
-            <div v-if="taken != undefined">{{note}} <mark>taken: {{ taken }}</mark></div>
-            <div v-if="locked != undefined">{{note}} <mark> locked: {{ locked }} </mark> </div>
-          
-
+          <li v-if="index == current && (taken != true)">            
+              <div v-if="(taken != undefined) && (taken == false)">{{note}} </div>
+              <div v-else>
+                <div v-if="locked != undefined">{{note}} <mark> locked: {{ locked }} </mark> </div>                
+                <div v-else>
+                  <div v-if="taken == undefined && locked == undefined">{{ note }} </div>
+                </div>
+              </div>
           </li>
         </div>
       </ul>
@@ -38,6 +40,9 @@ export default {
     taken: {
       type: Boolean,
     },
+    using: {
+      type: Boolean,
+    },
     locked: {
       type: Boolean,
     },
@@ -46,7 +51,7 @@ export default {
     },
   },
   data: function () {
-    return {
+    return {    
       showTitle: false,
       showTaken: false,
     };

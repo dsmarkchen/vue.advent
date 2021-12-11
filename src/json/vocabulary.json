@@ -11,6 +11,8 @@
         "east",
         "take",
         "drop",
+        "on",
+        "off",
         "score",
         "pit",
         "look",
@@ -30,14 +32,18 @@
         "debris",
         "awk",
         "bird",
-        "spit"
+        "spit",
+        "shell"
     ],
     "objects": [
+        "rug",
         "food",
         "bottle",
         "keys",
         "lamp",
         "grate", "grate_",
-        "cage"
+        "cage",
+        "clam"
+
     ]
 }
