@@ -17,7 +17,9 @@
         "pit",
         "look",
         "help",
-        "xyzzy"
+        "xyzzy",
+        "yes",
+        "no"
     ],
     "locations" : [
         "road",
@@ -33,7 +35,9 @@
         "awk",
         "bird",
         "spit",
-        "shell"
+        "shell",
+        "nugget",
+        "hall"
     ],
     "objects": [
         "rug",

@@ -152,6 +152,83 @@
     "name": "oil",
     "desc": "Oil in the bottle",
     "location": "limbo"    
-  }
+  },
+  {
+    "name": "treads",
+    "notes": [ 
+        "Rough stone steps lead down the pit.",
+        "Rough stone steps lead up the dome."
+    ],
+    "location": "spit",
+    "locked": false,
+    "current": 0
+  },
+  {
+    "name": "treads_",
+    "notes": [ 
+        "Rough stone steps lead down the pit.",
+        "Rough stone steps lead up the dome."
+    ],
+    "location": "emist",
+    "locked": false,
+    "current": 1
+  },
+  {
+    "name": "coins",
+    "desc": "Rare coins",
+    "notes": [ 
+        "There are many coins here!"
+    ],
+    "location": "west",
+    "current": 0
+  },
 
+  {
+    "name": "jewels",
+    "desc": "Precious jewelry",
+    "notes": [ 
+        "There is precious jewelry here!"
+    ],
+    "location": "south",
+    "taken": false,
+    "current": 0
+  },
+
+  {
+    "name": "silver",
+    "desc": "Bars of silver",
+    "notes": [ 
+        "There are bars of silver here!"
+    ],
+    "location": "nw",
+    "taken": false,
+    "current": 0
+  },
+
+  {
+    "name": "diamonds",
+    "desc": "Several diamonds",
+    "notes": [ 
+        "There are diamonds here!"
+    ],
+    "location": "wfiss",
+    "taken":false,
+    "current": 0
+  },
+
+  {
+    "name": "gold",
+    "desc": "Large gold nugget",
+    "notes": [ 
+        "There is a large sparkling nugget of gold here!"
+    ],
+    "location": "nugget",
+
+    "taken":false,
+    "current": 0
+  },
+
+  {
+
+  }  
 ]

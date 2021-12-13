@@ -1,6 +1,6 @@
 <template>
   <div class="score">
-    <div class="block" v-if="showscore">
+    <div class="alert alert-primary" v-if="showscore">
       <p>Your score: {{ score }}</p>
       <p>Max score: {{max_score}}</p>
 

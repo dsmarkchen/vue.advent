@@ -1,5 +1,5 @@
 <template>
-  <div class="alocation">
+  <div class="alocation" v-show="show_location">
     <div class="alert alert-info" v-if="cavehint==true"> {{caveHintMsg}} </div>
     <div class="alert alert-info" v-if="birdhint==true"> {{birdHintMsg}} </div>
     
@@ -72,13 +72,24 @@ export default {
     condition: {
       type: String,
     },
+    show_location: {
+      type: Boolean,
+    },
     showDesc: {
       type: Boolean,
     }
   },
+  watch:  {
+      show_location: function() {
+        console.log("show_location:" +  this.show_location);
+                  
+        this.$forceUpdate();
+      },
+     },
   created: function() {
     this.showDesc = true;    
     this.showName = false;
+    this.show_location = false;
   },
   data: function() {
     return {      

@@ -2,13 +2,23 @@
   <div class="container">
     <div class="advent">
       <div class="block">
-        <h1>
-          Welcome
-          <mark v-if="author.firstName != ''">{{ author.firstName }}</mark> to
-          Adventure!!
-        </h1>
+        <Banner
+          :bannerhint="banner_hint"
+          :banner="banner_msg"
+          :banner2="banner_msg2"
+          :banner3="banner_msg3"
+          :show_banner="show_banner"
+          :show_bannerhint="show_bannerhint"
+        ></Banner>
+      </div>
 
-        <ALocation
+        <div class="alert alert-primary" v-if="helpHint==true">  
+          <p>{{helpMsg}}</p> 
+          <p>{{helpMsg2}}</p> 
+        </div>
+      <div class="block">
+        <ALocation 
+          :show_location="show_location"
           :name="loc.name"
           :description="loc.description"
           :short="loc.short"
@@ -79,6 +89,7 @@
 <script>
 import ALocation from "./ALocation.vue";
 import Score from "./Score.vue";
+import Banner from "./Banner.vue"
 import AObject from "./AObject.vue";
 import objects from "../json/objects.json";
 import locations from "../json/locations.json";
@@ -124,6 +135,7 @@ export default {
     ALocation,
     AObject,
     Score,
+    Banner,
   },
   data: function () {
     return {
@@ -134,11 +146,13 @@ export default {
       is_dark: false,
       fsm: new FSM("", []),
       author: new Person("", ""),
-      act: "in",
+      act: "yes",
       loc: null,
       AObjects: [],
       Actions: ["in", "out"],
       Locations: locations,
+      helpHint:false,
+      show_location: false
     };
   },
   computed: {
@@ -167,6 +181,7 @@ export default {
     },
   },
   created: function () {
+    
     this.showObject = false;
     this.score = 20;
     this.full = true;
@@ -175,8 +190,86 @@ export default {
 
     this.fsm = new FSM("road", transitions);
     this.loc = JSON.parse(JSON.stringify(this.Locations[0]));
+    this.show_bannerhint = true;
+    this.show_banner = false;
+    this.helpHint = false;
+
+    this.banner_hint_default = "Welcome to Adventure! Would you like instructions?";
+    this.banner_msg_default = "Somewhere nearby is Colossal Cave, where others have found fortunes in treasure and gold, though it is rumored that some who enter are never seen again.  Magic is said to work in the cave.  I will be your eyes and hands.  Direct me with commands of one or two words.  I should warn you that I look at only the first five letters of each word, so you'll have to enter \"NORTHEAST\" as \"NE\" to distinguish it from \"NORTH\".  Should you get stuck, type \"HELP\" for some general hints. For information on how to end your adventure, etc., type \"INFO\".";
+    this.banner_msg_default2 ="The first adventure program was developed by Willie Crowther. Most of the features of the current program were added by Don Woods; all of its bugs were added by Don Knuth."
+
+    this.helpMsg="I know of places, actions, and things.  Most of my vocabulary describes places and is used to move you there.  To move, try words like forest, building, downstream, enter, east, west, north, south, up, or down.  I know about a few special objects, like a black rod hidden in the cave.  These objects can be manipulated using some of the action words that I know.  Usually you will need to give both the object and action words (in either order), but sometimes I can infer the object from the verb alone.  Some objects also imply verbs; in particular, \"inventory\" implies \"take inventory\", which causes me to give you a list of what you're carrying.  The objects have side effects; for instance, the rod scares the bird.  Usually people having trouble moving just need to try a few more words.  Usually people trying unsuccessfully to manipulate an object are attempting something beyond their (or my!) capabilities and should try a completely different tack.  To speed the game you can sometimes move long distances with a single word.  For example, \"building\" usually gets you to the building from anywhere above ground except when lost in the forest.  Also, note that cave passages turn a lot, and that leaving a room to the north does not guarantee entering the next from the south.";
+    this.helpMsg2 = "Good luck!"
+    this.welcome_hint = true;
+    this.welecome();
+
+    this.help_hint = false;
   },
   methods: {
+    welecome() {
+      if(this.welcome_hint) {
+        this.show_bannerhint = true;
+        this.show_banner = false;
+        this.banner_hint = this.banner_hint_default;
+        this.banner_msg = this.banner_msg_default;
+        this.banner_msg2 = this.banner_msg_default2;
+        this.banner_msg3 = this.banner_msg3_default3;
+      }
+      else {
+        this.show_bannerhint = false;
+        this.show_banner = true;    
+      }
+    },
+    help() {
+      if(this.help_hint) {
+        this.show_bannerhint = true;
+        this.show_banner = false;
+        this.banner_hint = "Need help?"
+        this.banner_msg = this.helpMsg;
+        this.banner_msg2 = this.helpMsg2;
+        this.banner_msg3 = "";
+      }
+      else {
+        this.show_bannerhint = false;
+        this.show_banner = true;
+        this.banner_msg = this.helpMsg;
+        this.banner_msg2 = this.helpMsg2;
+        this.banner_msg3 = "";
+        
+      }
+    },
+    look() {
+      this.show_bannerhint = false;
+      this.show_banner = false;
+      this.banner_msg = "";
+      this.show_location = true;
+    },
+    convent(action) {
+      let act = action;
+      if(action.length == 1) {
+          if(action == "n") {
+            act = "north";
+          }
+          if(action == "s") {
+            act = "south";
+          }
+
+          if(action == "e") {
+            act = "east";
+          }
+                    
+          if(action == "w") {
+            act = "east";
+          }
+
+
+      }
+      if(action == "key") {
+        action = "keys";
+      }
+      return act;
+
+    },
     isLampOn() {
       let onname = "lamp";
       for (const aobj of this.AObjects) {
@@ -195,30 +288,38 @@ export default {
       return false;
     },
     next() {
-      let act = this.act;
-      if(this.act.length == 1) {
-          if(this.act == "n") {
-            act = "north";
-          }
-          if(this.act == "s") {
-            act = "south";
-          }
-
-          if(this.act == "e") {
-            act = "east";
-          }
-                    
-          if(this.act == "w") {
-            act = "east";
-          }
-
-
-      }
+      let act = this.convent(this.act);
       console.log("act:" + act);      
+      if(this.welcome_hint == true && act == "yes") {
+        this.welcome_hint = false;
+        this.welecome();
+        this.$forceUpdate();
+        
+        return;
+      } 
+      if(this.welcome_hint == true && act == "no") {
+        this.show_bannerhint = false;
+        this.show_banner = false;
+        this.welcome_hint = false;
+        this.$forceUpdate();
+        return;
+      }
 
+      if(act == "help") {
+        this.help_hint = false;
+        this.help();
+        this.$forceUpdate();
+        return;
+      }
+      else {
+        this.helpHint = false;
+      }
       if (act == "score" || act == "quit") {
         this.showscore = true;
         return;
+      }
+      else {
+        this.showscore = false;
       }
 
       if (act.startsWith("on")) {
@@ -299,6 +400,11 @@ export default {
       if (act == "dump") {
         this.fsm.dump();
         return;
+      }
+
+      if(act == "look") {
+        this.look();
+        this.$forceUpdate();
       }
 
       console.log("fsm" + this.fsm);

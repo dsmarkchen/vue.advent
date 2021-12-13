@@ -127,7 +127,6 @@
     "pit": "spit"
   },
   "bird": { 
-    "_comment": "_q13",
     "entrance": "inside",
 
     "canyon": "awk",
@@ -136,7 +135,10 @@
     "debris": "debris",
     
     "pit": "spit",
-    "west": "spit"
+    "west": "spit",
+
+    "q": 13
+
   },
   "spit": { 
     "_comment": "_q14",
@@ -158,8 +160,16 @@
     "up": "spit",
     "y2": "jumble",
 
-    "q": "15"
+    "q": 15
   },
+  "nugget" : {
+    "north": "emist",
+    "out": "emist",
+    "hall":"emist", 
+
+    "q": 18
+  },
+
   "wfiss": {    
     "forward": "lose",
     "over": "efiss",
