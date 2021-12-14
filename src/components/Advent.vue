@@ -114,6 +114,7 @@ function FSM(initState, transitions) {
     }
   };
   this.transition = function (action) {
+    console.log("fsm transition: " + action);
     var currentState = this.state;
     var p = this.transitions;
     for (var key of Object.keys(p)) {
@@ -121,6 +122,7 @@ function FSM(initState, transitions) {
         for (var child_key of Object.keys(p[key])) {
           if (child_key == action) {
             this.state = p[key][child_key];
+            console.log("fsm next_state: " + this.state);
             break;
           }
         }
@@ -128,6 +130,44 @@ function FSM(initState, transitions) {
     }
   };
 }
+
+function FSMEx(context, initState, transitions) {
+  this.context = context;  
+  this.initState = initState;
+  this.transitions = transitions;
+  this.state = initState;
+  this.transition = function (actions) {
+    let words = actions.split(" ");
+    let action = words[0];
+    var currentState = this.state;
+    var p = this.transitions;
+    for (var key of Object.keys(p)) {
+      if (key == currentState) {
+        if(!((Object.keys(p[key])).includes(action))) {
+          context["_error"](action);          
+          return;
+        }
+        for (var child_key of Object.keys(p[key])) {
+          if (child_key == action) {
+            console.log("do: " + p[key][child_key].action + " " + p[key][child_key].arguments);
+            if(p[key][child_key].action != null) {
+              if(p[key][child_key].arguments == undefined) {
+                context[p[key][child_key].action]();
+              }
+              else {
+                context[p[key][child_key].action](p[key][child_key].arguments);
+              }
+            }
+            this.state = p[key][child_key].next_state;
+            break;
+          }
+        }
+      }
+    }
+    
+  };
+}
+
 
 export default {
   name: "Advent",
@@ -187,7 +227,37 @@ export default {
     this.full = true;
     this.author = new Person("", "");
     this.AObjects = objects;
+    var motionMap = {
+        'welcome_hint' : {  
+          'yes': {next_state: "idle", action: "_banner", arguments: "welcome"},
+          'no':  {next_state: "idle", action: "_banner", arguments:"off"}
+        },
+        'idle' : {
+          'score': {next_state:"idle", action: "_score"},
+          'help': {next_state: "idle", action: "_banner", arguments: "help"},
+          'look': {next_state: "idle", action: "_look"},
+          
+          'in': {next_state: "idle", action: "_move", arguments: "in"},
+          'out': {next_state: "idle", action: "_move", arguments: "out"},
+          'north': {next_state: "idle", action: "_move", arguments: "north"},
+          'south': {next_state: "idle", action: "_move", arguments: "south"},
+          'west': {next_state: "idle", action: "_move", arguments: "west"},
+          'east': {next_state: "idle", action: "_move", arguments: "east"},
+          'up': {next_state: "idle", action: "_move", arguments: "up"},
+          'down': {next_state: "idle", action: "_move", arguments: "down"},
 
+          'xyzzy': {next_state: "idle", action: "_move", arguments: "xyzzy"},
+
+
+          "take": {next_state: "idle", action: "_take", arguments: "take"},
+          "drop": {next_state: "idle", action: "_take", arguments: "drop"},
+          "on": {next_state: "idle", action: "_on"},
+          "off": {next_state: "idle", action: "_off"},
+        }
+
+    }
+    
+    this.mFSM = new FSMEx(this, 'welcome_hint', motionMap);
     this.fsm = new FSM("road", transitions);
     this.loc = JSON.parse(JSON.stringify(this.Locations[0]));
     this.show_bannerhint = true;
@@ -206,6 +276,97 @@ export default {
     this.help_hint = false;
   },
   methods: {
+    _error(warningMsg) {
+      console.log("fsm error: " + warningMsg);
+    },
+    _score() {
+      console.log("fsm score: "  );
+      this.showscore = true;
+    },
+    _banner(str) {
+      console.log("banner " + str    );
+      if(str.startsWith("off")) {
+        this.show_bannerhint = false;
+        this.show_banner = false;
+        this.instruction = "ok";
+        return;
+      }
+      if(str.startsWith("welcome")) {
+        this.show_bannerhint = false;
+        this.show_banner = true;
+        this.banner_hint = this.banner_hint_default;
+        this.banner_msg = this.banner_msg_default;
+        this.banner_msg2 = this.banner_msg_default2;
+        this.banner_msg3 = this.banner_msg3_default3;
+      }
+      if(str.startsWith("help")) {
+        this.show_bannerhint = false;
+        this.show_banner = true;
+        this.banner_msg = this.helpMsg;
+        this.banner_msg2 = this.helpMsg2;
+        this.banner_msg3 = "";
+      }
+
+    },
+    _look() {
+      this.show_bannerhint = false;
+      this.show_banner = false;
+      this.banner_msg = "";
+      this.show_location = true;
+    },
+    _move(act) {
+      console.log("move: " + act);      
+      this.fsm.transition(act);
+    },
+        
+    _take(act) {
+      console.log("take or drop: " + act);      
+      if (this.act.startsWith("take")) {
+        var objname = act.slice(4).trim();
+        console.log("take: " + objname);
+        for (const aobj of this.AObjects) {
+          if (aobj.name == objname) {
+            aobj.taken = true;
+            this.instruction = objname + "is taken";
+            break;
+          }
+        }
+        return;
+      }
+      
+    },
+
+    _on() {
+      var act = this.act;
+      var onname = act.slice(2).trim();
+      console.log("use (on): " + onname);
+      for (const aobj of this.AObjects) {
+          if (aobj.name == onname) {
+            if(aobj.taken) {
+              aobj.using = true;
+              this.instruction = onname + " is on";
+            }
+            break;
+          }
+        }        
+    },
+    _off() {
+      var act = this.act;
+      var offname = act.slice(3).trim();
+      console.log("use (off): " + offname);
+      for (const aobj of this.AObjects) {
+        if (aobj.name == offname) {
+          if(aobj.taken) {
+            aobj.using = false;
+            this.instruction = offname + " is off";
+          }
+          break;
+        }
+      }
+        
+      
+    },
+
     welecome() {
       if(this.welcome_hint) {
         this.show_bannerhint = true;
@@ -237,12 +398,6 @@ export default {
         this.banner_msg3 = "";
         
       }
-    },
-    look() {
-      this.show_bannerhint = false;
-      this.show_banner = false;
-      this.banner_msg = "";
-      this.show_location = true;
     },
     convent(action) {
       let act = action;
@@ -289,38 +444,14 @@ export default {
     },
     next() {
       let act = this.convent(this.act);
-      console.log("act:" + act);      
-      if(this.welcome_hint == true && act == "yes") {
-        this.welcome_hint = false;
-        this.welecome();
-        this.$forceUpdate();
+      console.log("act:" + act);    
+      console.log("start mFSM.state: " + this.mFSM.state);
+      this.mFSM.transition(this.act);
+      console.log("next mFSM.state: " + this.mFSM.state);
+      
+      this.$forceUpdate();
         
-        return;
-      } 
-      if(this.welcome_hint == true && act == "no") {
-        this.show_bannerhint = false;
-        this.show_banner = false;
-        this.welcome_hint = false;
-        this.$forceUpdate();
-        return;
-      }
-
-      if(act == "help") {
-        this.help_hint = false;
-        this.help();
-        this.$forceUpdate();
-        return;
-      }
-      else {
-        this.helpHint = false;
-      }
-      if (act == "score" || act == "quit") {
-        this.showscore = true;
-        return;
-      }
-      else {
-        this.showscore = false;
-      }
+      if(this.show_location == false)  return;
 
       if (act.startsWith("on")) {
         var onname = act.slice(2).trim();
@@ -402,10 +533,6 @@ export default {
         return;
       }
 
-      if(act == "look") {
-        this.look();
-        this.$forceUpdate();
-      }
 
       console.log("fsm" + this.fsm);
       console.log("initState: " + this.fsm.initState);
