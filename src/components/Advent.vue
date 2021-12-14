@@ -114,9 +114,9 @@ function FSM(initState, transitions) {
     }
   };
   this.transition = function (action) {
-    console.log("fsm transition: " + action);
     var currentState = this.state;
     var p = this.transitions;
+    console.log("fsm transition: " + action + " current state: " + currentState) ;
     for (var key of Object.keys(p)) {
       if (key == currentState) {
         for (var child_key of Object.keys(p[key])) {
@@ -141,6 +141,7 @@ function FSMEx(context, initState, transitions) {
     let action = words[0];
     var currentState = this.state;
     var p = this.transitions;
+    console.log("mfsm transition: " + action + " current state: " + currentState) ;
     for (var key of Object.keys(p)) {
       if (key == currentState) {
         if(!((Object.keys(p[key])).includes(action))) {
@@ -159,6 +160,8 @@ function FSMEx(context, initState, transitions) {
               }
             }
             this.state = p[key][child_key].next_state;
+            console.log("mfsm key:" + key + "child_key:" + child_key)
+            console.log("mfsm next state: " +this.state)
             break;
           }
         }
@@ -192,7 +195,16 @@ export default {
       Actions: ["in", "out"],
       Locations: locations,
       helpHint:false,
-      show_location: false
+      show_location: false,
+
+      pitchDarkMsg: "It is now pitch dark.  If you proceed you will most likely fall into a pit.",
+
+      caveHintMsg:"The grate is very solid and has a hardened steel lock.  You cannot enter without a key, and there are no keys in sight.  I would recommend looking elsewhere for the keys.",
+      birdHintMsg: "Something seems to be frightening the bird just now and you cannot catch it no matter what you try.  Perhaps you might try later.",
+      snakeHintMsg:"You can't kill the snake, or drive it away, or avoid it, or anything like that.  There is a way to get by, but you don't have the necessary resources right now",
+      darkHintMsg:"You can make the passages look less alike by dropping things.",
+      wittHintMsg:"There is a way to explore that region without having to worry about falling into a pit.  None of the objects available is immediately useful for discovering the secret."
+
     };
   },
   computed: {
@@ -233,6 +245,7 @@ export default {
           'no':  {next_state: "idle", action: "_banner", arguments:"off"}
         },
         'idle' : {
+          'info': {next_state: "idle", action: "_banner", arguments:"info"},
           'score': {next_state:"idle", action: "_score"},
           'help': {next_state: "idle", action: "_banner", arguments: "help"},
           'look': {next_state: "idle", action: "_look"},
@@ -253,9 +266,15 @@ export default {
           "drop": {next_state: "idle", action: "_take", arguments: "drop"},
           "on": {next_state: "idle", action: "_on"},
           "off": {next_state: "idle", action: "_off"},
+
+          'dark': {next_state: "dark", action: "_banner", arguments: "dark"}
+        },
+        'dark' : {
+          'on': {next_state: "idle", action: "on"},
+          'look': {next_state: "dark", action: "_banner", arguments:"dark"}
         }
 
-    }
+    };
     
     this.mFSM = new FSMEx(this, 'welcome_hint', motionMap);
     this.fsm = new FSM("road", transitions);
@@ -269,7 +288,8 @@ export default {
     this.banner_msg_default2 ="The first adventure program was developed by Willie Crowther. Most of the features of the current program were added by Don Woods; all of its bugs were added by Don Knuth."
 
     this.helpMsg="I know of places, actions, and things.  Most of my vocabulary describes places and is used to move you there.  To move, try words like forest, building, downstream, enter, east, west, north, south, up, or down.  I know about a few special objects, like a black rod hidden in the cave.  These objects can be manipulated using some of the action words that I know.  Usually you will need to give both the object and action words (in either order), but sometimes I can infer the object from the verb alone.  Some objects also imply verbs; in particular, \"inventory\" implies \"take inventory\", which causes me to give you a list of what you're carrying.  The objects have side effects; for instance, the rod scares the bird.  Usually people having trouble moving just need to try a few more words.  Usually people trying unsuccessfully to manipulate an object are attempting something beyond their (or my!) capabilities and should try a completely different tack.  To speed the game you can sometimes move long distances with a single word.  For example, \"building\" usually gets you to the building from anywhere above ground except when lost in the forest.  Also, note that cave passages turn a lot, and that leaving a room to the north does not guarantee entering the next from the south.";
-    this.helpMsg2 = "Good luck!"
+    this.helpMsg2 = "Good luck!";
+    this.infoMsg ="If you want to end your adventure early, say \"quit\".  To get full credit for a treasure, you must have left it safely in the building, though you get partial credit just for locating it.  You lose points for getting killed, or for quitting, though the former costs you more. There are also points based on how much (if any) of the cave you've managed to explore; in particular, there is a large bonus just for getting in (to distinguish the beginners from the rest of the pack), and there are other ways to determine whether you've been through some of the more harrowing sections.  If you think you've found all the treasures, just keep exploring for a while.  If nothing interesting happens, you haven't found them all yet.  If something interesting DOES happen, it means you're getting a bonus and have an opportunity to garner many more points in the master's section. I may occasionally offer hints if you seem to be having trouble. If I do, I'll warn you in advance how much it will affect your score to accept the hints.  Finally, to save paper, you may specify \"brief\", which tells me never to repeat the full description of a place unless you explicitly ask me to.";
     this.welcome_hint = true;
     this.welecome();
 
@@ -291,6 +311,13 @@ export default {
         this.instruction = "ok";
         return;
       }
+      if(str.startsWith("dark")) {
+        this.show_bannerhint = false;
+        this.show_banner = true;
+        this.banner_msg =  this.pitchDarkMsg; 
+        this.banner_msg2 = "";
+        this.banner_msg3 = "";
+      }
       if(str.startsWith("welcome")) {
         this.show_bannerhint = false;
         this.show_banner = true;
@@ -306,17 +333,51 @@ export default {
         this.banner_msg2 = this.helpMsg2;
         this.banner_msg3 = "";
       }
-
+      if(str.startsWith("info")) {
+        this.show_bannerhint = false;
+        this.show_banner = true;
+        this.banner_msg = this.infoMsg;
+        this.banner_msg2 = "";
+        this.banner_msg3 = "";
+      }
     },
+
     _look() {
       this.show_bannerhint = false;
       this.show_banner = false;
       this.banner_msg = "";
       this.show_location = true;
     },
+
     _move(act) {
-      console.log("move: " + act);      
+      console.log("move: " + act);   
+      this.show_location = true;   
       this.fsm.transition(act);
+
+      for (const loc of this.Locations) {
+        if (loc.name == this.fsm.state) {
+          this.loc = Object.assign({}, loc);
+          
+          if (this.loc.lighted == true) {
+            this.is_dark = false;
+          } 
+          else {
+            if(this.isLampOn()) {
+              this.is_dark = false;
+            }
+            else {
+              //this.is_dark = true;
+              this.mFSM.transition("dark");
+              
+              
+            }
+          }
+          console.log("is_dark: " + this.is_dark);
+          console.log("location: " + loc.name + ", lighted: " + loc.lighted);
+          this.instruction = "";
+          break;
+        }
+      }
     },
         
     _take(act) {
@@ -534,33 +595,9 @@ export default {
       }
 
 
-      console.log("fsm" + this.fsm);
-      console.log("initState: " + this.fsm.initState);
-      this.fsm.transition(this.act);
+      
 
-      console.log("state: " + this.fsm.state);
-
-      for (const loc of this.Locations) {
-        if (loc.name == this.fsm.state) {
-          this.loc = Object.assign({}, loc);
-          
-          if (this.loc.lighted == true) {
-            this.is_dark = false;
-          } 
-          else {
-            if(this.isLampOn()) {
-              this.is_dark = false;
-            }
-            else {
-              this.is_dark = true;
-            }
-          }
-          console.log("is_dark: " + this.is_dark);
-          console.log("location: " + loc.name + ", lighted: " + loc.lighted);
-          this.instruction = "";
-          break;
-        }
-      }
+      
     },
   },
 };
