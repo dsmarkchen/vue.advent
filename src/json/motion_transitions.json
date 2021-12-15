@@ -1,0 +1,259 @@
+{
+  "begin": {
+    "yes": {
+      "next_state": "welcome_hint",
+      "action": "_banner2",
+      "arguments": {
+        "show_score": false,
+        "show_bannerhint": true,
+        "banner_hint": "Welcome to Adventure! Would you like instructions?",
+        "show_banner": false,
+        "banner_msg": "",
+        "banner_msg2": "",
+        "banner_msg3": "",
+        "instruction": ""
+      }
+    }
+  },
+  "welcome_hint": {
+    "yes": {
+      "next_state": "idle",
+      "action": "_banner2",
+      "arguments": {
+        "show_score": false,
+        "show_bannerhint": false,
+        "show_banner": true,
+        "banner_msg": "Somewhere nearby is Colossal Cave, where others have found fortunes in treasure and gold, though it is rumored that some who enter are never seen again.  Magic is said to work in the cave.  I will be your eyes and hands.  Direct me with commands of one or two words.  I should warn you that I look at only the first five letters of each word, so you'll have to enter \"NORTHEAST\" as \"NE\" to distinguish it from \"NORTH\".  Should you get stuck, type \"HELP\" for some general hints. For information on how to end your adventure, etc., type \"INFO\".",
+        "banner_msg2": "",
+        "banner_msg3": "",
+        "instruction": ""
+      }
+    },
+
+    "no": {
+      "next_state": "idle",
+      "action": "_banner2",
+      "arguments": {
+        "show_score": false,
+        "show_bannerhint": false,
+        "show_banner": false,
+        "instruction": ""
+      }
+    },
+    "not_yes_no": {
+      "next_state": "welcome_hint",
+      "action": "_banner2",
+      "arguments": {
+        "instruction": "Please answer Yes or No.",
+        "show_score": false
+      }
+    }
+  },
+  "quit_hint": {
+    "yes": { "next_state": "end", "action": "_end" },
+
+    "no": {
+      "next_state": "idle",
+      "action": "_banner2",
+      "arguments": {
+        "show_score": false,
+        "show_bannerhint": false,
+        "show_banner": false,
+        "instruction": ""
+      }
+    },
+
+    "not_yes_no": {
+      "next_state": "quit_hint",
+      "action": "_banner2",
+      "arguments": {
+        "instruction": "Please answer Yes or No.",
+        "show_score": false
+      }
+    }
+  },
+
+  "idle": {
+    "quit": {
+      "next_state": "quit_hint",
+      "action": "_banner2",
+      "arguments": {
+        "show_score": true,
+        "show_bannerhint": true,
+        "banner_hint": "Do you really want to quit now?",
+        "show_banner": false,
+        "instruction": ""
+      }
+    },
+
+    "info": {
+      "next_state": "idle",
+      "action": "_banner2",
+      "arguments": {
+        "show_score": false,
+        "show_bannerhint": false,
+        "show_banner": true,
+        "banner_msg": "If you want to end your adventure early, say \"quit\".  To get full credit for a treasure, you must have left it safely in the building, though you get partial credit just for locating it.  You lose points for getting killed, or for quitting, though the former costs you more. There are also points based on how much (if any) of the cave you've managed to explore; in particular, there is a large bonus just for getting in (to distinguish the beginners from the rest of the pack), and there are other ways to determine whether you've been through some of the more harrowing sections.  If you think you've found all the treasures, just keep exploring for a while.  If nothing interesting happens, you haven't found them all yet.  If something interesting DOES happen, it means you're getting a bonus and have an opportunity to garner many more points in the master's section. I may occasionally offer hints if you seem to be having trouble. If I do, I'll warn you in advance how much it will affect your score to accept the hints.  Finally, to save paper, you may specify \"brief\", which tells me never to repeat the full description of a place unless you explicitly ask me to.",
+        "banner_msg2": "",
+        "banner_msg3": ""
+      }
+    },
+    "help": { 
+      "next_state": "idle", 
+      "action": "_banner2", 
+      "arguments": {
+        "show_score": false,
+        "show_bannerhint": false,
+        "show_banner": true,
+        "banner_msg": "I know of places, actions, and things.  Most of my vocabulary describes places and is used to move you there.  To move, try words like forest, building, downstream, enter, east, west, north, south, up, or down.  I know about a few special objects, like a black rod hidden in the cave.  These objects can be manipulated using some of the action words that I know.  Usually you will need to give both the object and action words (in either order), but sometimes I can infer the object from the verb alone.  Some objects also imply verbs; in particular, \"inventory\" implies \"take inventory\", which causes me to give you a list of what you're carrying.  The objects have side effects; for instance, the rod scares the bird.  Usually people having trouble moving just need to try a few more words.  Usually people trying unsuccessfully to manipulate an object are attempting something beyond their (or my!) capabilities and should try a completely different tack.  To speed the game you can sometimes move long distances with a single word.  For example, \"building\" usually gets you to the building from anywhere above ground except when lost in the forest.  Also, note that cave passages turn a lot, and that leaving a room to the north does not guarantee entering the next from the south.",         
+        "banner_msg2":"Good luck!",
+        "banner_msg3": ""
+      }
+
+    },
+    "score": { "next_state": "idle", "action": "_score" },
+
+    "look": {
+      "next_state": "idle",
+      "action": "_banner2",
+      "arguments": {
+        "show_bannerhint": true,
+        "banner_hint": "Sorry, but I am not allowed to give more detail.  I will repeat the long description of your location.",
+        "banner_msg": "",
+        "show_location": true
+      }
+    },
+
+    "in": { "next_state": "idle", "action": "_move", "arguments": "in" },
+    "out": { "next_state": "idle", "action": "_move", "arguments": "out" },
+    "north": { "next_state": "idle", "action": "_move", "arguments": "north" },
+    "south": { "next_state": "idle", "action": "_move", "arguments": "south" },
+    "west": { "next_state": "idle", "action": "_move", "arguments": "west" },
+    "east": { "next_state": "idle", "action": "_move", "arguments": "east" },
+    "up": { "next_state": "idle", "action": "_move", "arguments": "up" },
+    "down": { "next_state": "idle", "action": "_move", "arguments": "down" },
+
+    "xyzzy": { "next_state": "idle", "action": "_move", "arguments": "xyzzy" },
+
+    "take": { "next_state": "idle", "action": "_take", "arguments": "take" },
+    "drop": { "next_state": "idle", "action": "_take", "arguments": "drop" },
+    "on": { "next_state": "idle", "action": "_on" },
+    "off": { "next_state": "idle", "action": "_off" },
+
+    "dark_no_light": {
+      "next_state": "dark",
+      "action": "_banner2",
+      "arguments": {
+        "is_danger": true,
+        "show_bannerhint": false,
+        "show_banner": true,
+        "banner_msg": "It is now pitch dark.  If you proceed you will most likely fall into a pit.",
+        "show_location": false
+      }
+    },
+    "cave_hint": {
+      "next_state": "idle",
+      "action": "_banner2",
+      "arguments": {
+        "show_score": false,
+        "show_bannerhint": false,
+        "show_banner": true,
+        "banner_msg": "The grate is very solid and has a hardened steel lock.  You cannot enter without a key, and there are no keys in sight.  I would recommend looking elsewhere for the keys.",
+        "banner_msg2": "",
+        "banner_msg3": "",
+        "instruction": ""
+      }
+    },
+    "bird_hint": {
+      "next_state": "idle",
+      "action": "_banner2",
+      "arguments": {
+        "show_score": false,
+        "show_bannerhint": false,
+        "show_banner": true,
+        "banner_msg": "Something seems to be frightening the bird just now and you cannot catch it no matter what you try.  Perhaps you might try later.",
+        "banner_msg2": "",
+        "banner_msg3": "",
+        "instruction": ""
+      }
+    },
+    "snake_hint": {
+      "next_state": "idle",
+      "action": "_banner2",
+      "arguments": {
+        "show_score": false,
+        "show_bannerhint": false,
+        "show_banner": true,
+        "banner_msg": "You can't kill the snake, or drive it away, or avoid it, or anything like that.  There is a way to get by, but you don't have the necessary resources right now",
+        "banner_msg2": "",
+        "banner_msg3": "",
+        "instruction": ""
+      }
+    },
+    "dark_hint": {
+      "next_state": "idle",
+      "action": "_banner2",
+      "arguments": {
+        "show_score": false,
+        "show_bannerhint": false,
+        "show_banner": true,
+        "banner_msg": "You can make the passages look less alike by dropping things.",
+        "banner_msg2": "",
+        "banner_msg3": "",
+        "instruction": ""
+      }
+    },
+    "witt_hint": {
+      "next_state": "idle",
+      "action": "_banner2",
+      "arguments": {
+        "show_score": false,
+        "show_bannerhint": false,
+        "show_banner": true,
+        "banner_msg": "There is a way to explore that region without having to worry about falling into a pit.  None of the objects available is immediately useful for discovering the secret.",
+        "banner_msg2": "",
+        "banner_msg3": "",
+        "instruction": ""
+      }
+    }
+  },
+  "dark": {
+    "look": {
+      "next_state": "dark",
+      "action": "_banner2",
+      "arguments": {
+        "is_danger": true,
+        "show_bannerhint": false,
+        "show_banner": true,
+        "banner_msg": "It is now pitch dark.  If you proceed you will most likely fall into a pit.",
+        "show_location": false
+      }
+    },
+    "move_in_darkness": {
+      "next_state": "pitch_dark",
+      "action": "_banner2",
+      "arguments": {
+        "is_danger": true,
+        "show_bannerhint": false,
+        "show_banner": true,
+        "banner_msg": "You are dead!",
+        "show_location": false
+      }
+    },
+    "on": {        
+        "next_state": "dark",
+        "action": "_on"        
+    },
+    "lamp_on": {
+        "next_state": "idle",
+        "action": "_banner2",
+        "arguments": {
+          "is_danger": false,
+          "show_bannerhint": false,
+          "show_banner": false,          
+          "show_location": true
+        }
+  
+    }
+  }
+}

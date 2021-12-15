@@ -20,7 +20,8 @@
         "help",
         "xyzzy",
         "yes",
-        "no"
+        "no" ,
+        "quit"
     ],
     "locations" : [
         "road",

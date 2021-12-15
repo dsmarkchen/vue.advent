@@ -3,10 +3,13 @@
     <div class="alert alert-primary" v-if="show_bannerhint">
         <h6> {{bannerhint}}</h6>
     </div>
-    <div class="alert alert-primary" v-if="show_banner">
+    <div class="alert alert-primary" v-show="show_banner" v-if="is_danger == false">
       <p>{{banner}}</p>
       <p v-if="banner2 !=''">{{banner2}}</p>
       <p v-if="banner3 !=''">{{banner3}}</p>
+    </div>
+    <div class="alert alert-danger" v-show="show_banner" v-else>            
+        <p>{{banner}}</p>
     </div>
   </div>
 </template>
@@ -32,6 +35,9 @@ export default {
     },    
     show_banner: {
         type:Boolean 
+    },
+    is_danger: {
+      type:Boolean
     }
   },  
   watch:  {
