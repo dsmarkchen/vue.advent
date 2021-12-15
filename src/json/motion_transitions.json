@@ -24,7 +24,7 @@
         "show_bannerhint": false,
         "show_banner": true,
         "banner_msg": "Somewhere nearby is Colossal Cave, where others have found fortunes in treasure and gold, though it is rumored that some who enter are never seen again.  Magic is said to work in the cave.  I will be your eyes and hands.  Direct me with commands of one or two words.  I should warn you that I look at only the first five letters of each word, so you'll have to enter \"NORTHEAST\" as \"NE\" to distinguish it from \"NORTH\".  Should you get stuck, type \"HELP\" for some general hints. For information on how to end your adventure, etc., type \"INFO\".",
-        "banner_msg2": "",
+        "banner_msg2":  "The first adventure program was developed by Willie Crowther. Most of the features of the current program were added by Don Woods; all of its bugs were added by Don Knuth.",
         "banner_msg3": "",
         "instruction": ""
       }
@@ -118,9 +118,12 @@
       "action": "_banner2",
       "arguments": {
         "show_bannerhint": true,
+        "show_banner": false,
         "banner_hint": "Sorry, but I am not allowed to give more detail.  I will repeat the long description of your location.",
         "banner_msg": "",
-        "show_location": true
+        "banner_msg2": "",
+        "show_location": true,
+        "instruction": ""
       }
     },
 
@@ -135,8 +138,8 @@
 
     "xyzzy": { "next_state": "idle", "action": "_move", "arguments": "xyzzy" },
 
-    "take": { "next_state": "idle", "action": "_take", "arguments": "take" },
-    "drop": { "next_state": "idle", "action": "_take", "arguments": "drop" },
+    "take": { "next_state": "idle", "action": "_take"},
+    "drop": { "next_state": "idle", "action": "_drop" },
     "on": { "next_state": "idle", "action": "_on" },
     "off": { "next_state": "idle", "action": "_off" },
 

@@ -355,25 +355,55 @@ export default {
       this.banner_msg = "";
       this.banner_msg2 = "";
       this.banner_msg3 = "";
+      this.instruction = "";
 
       this.lfsm.transition(act);
     },
 
-    _take(act) {
-      console.log("take or drop: " + act);
+    _take() {
+      
       if (this.act.startsWith("take")) {
-        var objname = act.slice(4).trim();
+        var objname = this.act.slice(4).trim();
         console.log("take: " + objname);
         for (const aobj of this.AObjects) {
           if (aobj.name == objname) {
-            aobj.taken = true;
-            this.instruction = objname + "is taken";
+            if(aobj.taken == true) {              
+              this.instruction = objname + " is already taken.";
+            }
+            else {
+              aobj.taken = true;
+              this.instruction = objname + " is taken.";
+              
+            }
             break;
           }
         }
         return;
       }
     },
+    _drop() {
+      
+      if (this.act.startsWith("drop")) {
+        var objname = this.act.slice(4).trim();
+        console.log("drop: " + objname);
+        for (const aobj of this.AObjects) {
+          if (aobj.name == objname) {
+            if(aobj.taken == true) {
+              this.instruction = objname + " is dropped."              
+              aobj.take = false;
+            }
+            else {
+              
+              this.instruction = objname + " is not available.";
+              
+            }
+            break;
+          }
+        }
+        return;
+      }
+    },
+
 
     _on() {
       var act = this.act;
@@ -404,35 +434,7 @@ export default {
       }
     },
 
-    welecome() {
-      if (this.welcome_hint) {
-        this.show_bannerhint = true;
-        this.show_banner = false;
-        this.banner_hint = this.banner_hint_default;
-        this.banner_msg = this.banner_msg_default;
-        this.banner_msg2 = this.banner_msg_default2;
-        this.banner_msg3 = this.banner_msg3_default3;
-      } else {
-        this.show_bannerhint = false;
-        this.show_banner = true;
-      }
-    },
-    help() {
-      if (this.help_hint) {
-        this.show_bannerhint = true;
-        this.show_banner = false;
-        this.banner_hint = "Need help?";
-        this.banner_msg = this.helpMsg;
-        this.banner_msg2 = this.helpMsg2;
-        this.banner_msg3 = "";
-      } else {
-        this.show_bannerhint = false;
-        this.show_banner = true;
-        this.banner_msg = this.helpMsg;
-        this.banner_msg2 = this.helpMsg2;
-        this.banner_msg3 = "";
-      }
-    },
+    
     convent(action) {
       let act = action.toLowerCase();
       if (action.length == 1) {
